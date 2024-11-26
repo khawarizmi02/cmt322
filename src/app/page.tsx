@@ -1,4 +1,4 @@
-// // "use client";
+"use client";
 // // import { useState, useEffect } from "react";
 // import {
 //   query,
@@ -40,6 +40,7 @@
 // }
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Inter } from "next/font/google";
 import {
   FaMapMarkerAlt,
@@ -68,12 +69,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { NewsDetails } from "@/data/mock-news";
-import { SportsListDetails } from "@/data/mock-sportslist";
+import { SportsList, SportsListDetails } from "@/data/mock-sportslist";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Home: React.FC = () => {
+
+  const router = useRouter();
+
+  const handleSelect = (sports: SportsList) => {
+    const router = useRouter();
+    router.push(`/guest/details?sport=${sports.title}&category=${sports.category}`);
+  };
+
   return (
     <div className={`${inter.className} grid grid-cols-1 max-w-full `}>
       {/* Announcement */}
@@ -181,33 +190,39 @@ const Home: React.FC = () => {
           </button>
         </div>
         <div className="flex bg-gray-100 p-4 pb-10">
-        <ScrollArea className="w-full whitespace-nowrap rounded-md">
-          <div className='flex gap-4'>
-            {SportsListDetails.map((sports) => (
-              <><div className='w-[200px] h-[250px]'>
-                <Card className='w-full h-full flex flex-col'>
-                  <CardHeader className='p-2 space-y-2 flex-shrink-0'>
-                    <CardTitle className='text-lg'>{sports.title}</CardTitle>
-                    <CardDescription className='text-sm line-clamp-2'> {/* Added line-clamp-2 */}
-                      {sports.category}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className='p-2 flex-grow flex items-center justify-center'>
-                    <div className='relative w-full h-full'>
-                      <Image
-                        src={`${sports.image}`}
-                        alt="Football"
-                        layout="fill"
-                        objectFit="contain"
-                        className='rounded-md' />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              </>))} 
-            </div><ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
+          <ScrollArea className="w-full whitespace-nowrap rounded-md">
+            <div className='flex gap-4'>
+              {SportsListDetails.map((sports) => (
+                <div 
+                  key={sports.title} 
+                  className='w-[200px] h-[250px] cursor-pointer'
+                  onClick={() => handleSelect(sports)}
+                >  
+                  <Card className='w-full h-full flex flex-col'>
+                    <CardHeader className='p-2 space-y-2 flex-shrink-0'>
+                      <CardTitle className='text-lg'>{sports.title}</CardTitle>
+                      <CardDescription className='text-sm line-clamp-2'>
+                        {sports.category}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className='p-2 flex-grow flex items-center justify-center'>
+                      <div className='relative w-full h-full'>
+                        <Image
+                          src={`${sports.image}`}
+                          alt="Football"
+                          layout="fill"
+                          objectFit="contain"
+                          className='rounded-md' 
+                        />
+                      </div>
+                    </CardContent>
+                  </Card> 
+                </div>
+              ))} 
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
 
       {/* Footer */}
       <footer className="bg-transparent py-8 px-6">
